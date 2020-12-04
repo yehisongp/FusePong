@@ -137,11 +137,14 @@
                         this.consultarEmpresas();
 
                     }else{
-                        this.$bvToast.toast(res.data.Mensaje, {
-                            title: 'Advertencia',
-                            variant: 'warning',
-                            solid: true
+                        res.data.Mensaje.forEach(element => {
+                            this.$bvToast.toast(element, {
+                                title: 'Advertencia',
+                                variant: 'warning',
+                                solid: true
+                            });
                         });
+                        
                         this.modalShow = true;
                     }
                 });

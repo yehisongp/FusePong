@@ -28,10 +28,10 @@ class EmpresasController extends Controller
         switch ($request->Accion) {
             case 'Guardar':
                 // Validar que la empresa con el nit indicado no exista
-                if ($this->ValidarEmpresa($request->Empresa)) {
+                if ($this->ValidarEmpresa($request->Empresa)['Estado']) {
                     return response()->json([
                         'Response' => false,
-                        'Mensaje' => 'El NIT ingresado ya ha sido asignado a otra empresa',
+                        'Mensaje' => $this->ValidarEmpresa($request->Empresa)['Mensaje'],
                     ], 200);
                 }
                 DB::beginTransaction();
@@ -57,7 +57,38 @@ class EmpresasController extends Controller
                     ], 500);
                 }
                 break;
-            
+            case 'Editar':
+                // Validar que la empresa con el nit indicado no exista
+                if ($this->ValidarEmpresa($request->Empresa)['Estado']) {
+                    return response()->json([
+                        'Response' => false,
+                        'Mensaje' => $this->ValidarEmpresa($request->Empresa)['Mensaje'],
+                    ], 200);
+                }
+                DB::beginTransaction();
+                try {
+                    $Empresa = DB::TABLE('empresa')
+                                    ->WHERE('id', $request->Empresa['id'])
+                                    ->UPDATE([
+                                        'Nit' => $request->Empresa['NIT'],
+                                        'Nombre' => $request->Empresa['Nombre'],
+                                        'Telefono' => $request->Empresa['Telefono'],
+                                        'Direccion' => $request->Empresa['Direccion'],
+                                        'Email' => $request->Empresa['Email'],
+                                    ]);
+                    DB::commit();
+                    return response()->json([
+                        'Response' => true,
+                        'Mensaje' => 'Empresa actualizada correctamente!',
+                    ], 200);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'Response' => false,
+                        'Mensaje' => 'Hubo un error al actualizar la empresa, por favor contactar al administrador del sistema.',
+                        'mensajeError' => $e->getMessage()
+                    ], 500);
+                }
+                break;
             default:
                 return response()->json([
                     'Response' => false,
@@ -68,13 +99,20 @@ class EmpresasController extends Controller
     }
     private function ValidarEmpresa($Empresa){
         try {
+            $Estado = false;
+            $Mensaje = array();
             $Empresa = DB::TABLE('empresa')
                         ->WHERE('Nit', $Empresa['NIT'])
+                        ->WHERE('id', '<>', $Empresa['id'])
                         ->GET();
             if (count($Empresa) > 0) {
-                return true;
+                $Estado = true;
+                array_push($Mensaje, 'El NIT ingresado ya ha sido asignado a otra empresa');
             }
-            return false;
+            return [
+                'Estado' => $Estado,
+                'Mensaje' => $Mensaje
+            ];
         } catch (Exception $e) {
             
         }

@@ -20,6 +20,9 @@
                             <jet-nav-link :href="route('Empresas')" :active="route().current('Empresas')">
                                 Empresas
                             </jet-nav-link>
+                            <jet-nav-link :href="route('Empresas')" :active="route().current('Empresas')">
+                                Proyectos
+                            </jet-nav-link>
                         </div>
                     </div>
 
