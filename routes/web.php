@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresasController;
+use App\Http\Controllers\ProyectoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,3 +25,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/Empresas', [EmpresasController::class, 'index'])->name('Empresas');
 Route::middleware(['auth:sanctum', 'verified'])->get('/consultarEmpresas', [EmpresasController::class, 'ConsultarEmpresas']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/guardarEmpresa', [EmpresasController::class, 'GuardarEmpresa']);
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/Proyectos', [ProyectoController::class, 'index'])->name('Proyectos');
+Route::middleware(['auth:sanctum', 'verified'])->post('/guardarProyecto', [ProyectoController::class, 'GuardarProyecto']);
+Route::middleware(['auth:sanctum', 'verified'])->get('/consultarProyectos', [ProyectoController::class, 'ConsultarProyectos']);

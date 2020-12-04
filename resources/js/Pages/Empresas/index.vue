@@ -152,7 +152,6 @@
             consultarEmpresas(){
                 axios.get('/consultarEmpresas').then((res) => {
                     this.listaEmpresas = res.data.Empresas;
-                    console.log(res.data.Empresas)
                 });
             },
             editarEmpresa(Empresa){
