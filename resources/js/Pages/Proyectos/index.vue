@@ -15,8 +15,10 @@
                     <small>{{value.Fecha}}</small>
                     </div>
 
-                    <b-button pill variant="primary" @click="editarProyecto(value)">Editar</b-button>
-                    <b-button pill variant="outline-secondary">Historias de usuario</b-button>
+                    <b-button size="sm" variant="primary" @click="editarProyecto(value)">Editar</b-button>
+                    <jet-nav-link class="btn btn-secondary btn-sm" :href="route('HistoriaUsuario', [{id: value.id}])">
+                        Historias de usuario
+                    </jet-nav-link>
                 </b-list-group-item>
             </b-list-group>
             <b-modal 
@@ -50,10 +52,11 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-
+    import JetNavLink from '@/Jetstream/NavLink'
     export default {
         components: {
             AppLayout,
+            JetNavLink,
         },
         data() {
             return {

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\ProyectoController;
+use App\Http\Controllers\HistoriaUsuarioController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,3 +30,10 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/guardarEmpresa', [Empres
 Route::middleware(['auth:sanctum', 'verified'])->get('/Proyectos', [ProyectoController::class, 'index'])->name('Proyectos');
 Route::middleware(['auth:sanctum', 'verified'])->post('/guardarProyecto', [ProyectoController::class, 'GuardarProyecto']);
 Route::middleware(['auth:sanctum', 'verified'])->get('/consultarProyectos', [ProyectoController::class, 'ConsultarProyectos']);
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/consultarHistoriasProyecto/{id}', [HistoriaUsuarioController::class, 'index'])->name('HistoriaUsuario');
+Route::middleware(['auth:sanctum', 'verified'])->get('/consultarHistoriasUsuario/{id}', [HistoriaUsuarioController::class, 'ConsultarHistoriasUsuario']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/guardarHistoria', [HistoriaUsuarioController::class, 'GuardarHistoria']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/guardarTicket', [HistoriaUsuarioController::class, 'GuardarTicket']);
+Route::middleware(['auth:sanctum', 'verified'])->get('/consultarTickets/{id}', [HistoriaUsuarioController::class, 'ConsultarTickets']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/estadoTicket', [HistoriaUsuarioController::class, 'EstadoTicket']);
