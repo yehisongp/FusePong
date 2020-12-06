@@ -91,6 +91,13 @@
                         });
                         this.consultarProyectos();
                     }else{
+                        res.data.Mensaje.forEach(element => {
+                            this.$bvToast.toast(element, {
+                                title: 'Advertencia',
+                                variant: 'warning',
+                                solid: true
+                            });
+                        });
                         this.modalShow = true;
                     }
                 });

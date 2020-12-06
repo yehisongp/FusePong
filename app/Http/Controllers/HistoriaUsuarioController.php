@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use Validator;
 
 class HistoriaUsuarioController extends Controller
 {
@@ -42,6 +43,17 @@ class HistoriaUsuarioController extends Controller
         }
     }
     public function GuardarHistoria(Request $request){
+        $ValidarForm = Validator::make($request->Historia, [
+            'Titulo' => ['required', 'string', 'max:255'],
+        ]);
+
+        if (!$ValidarForm->passes()) {
+            return response()->json([
+                'Response' => false,
+                'Mensaje' => $ValidarForm->errors()->all()
+            ], 200);
+        }
+
         switch ($request->Accion) {
             case 'Guardar':
                 DB::beginTransaction();
@@ -70,6 +82,17 @@ class HistoriaUsuarioController extends Controller
         }
     }
     public function GuardarTicket(Request $request){
+
+        $ValidarForm = Validator::make($request->Ticket, [
+            'Comentarios' => ['required', 'string', 'max:255'],
+        ]);
+
+        if (!$ValidarForm->passes()) {
+            return response()->json([
+                'Response' => false,
+                'Mensaje' => $ValidarForm->errors()->all()
+            ], 200);
+        }
         switch ($request->Accion) {
             case 'Guardar':
                 DB::beginTransaction();

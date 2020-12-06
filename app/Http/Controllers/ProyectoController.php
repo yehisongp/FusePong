@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use DB;
+use Validator;
 
 class ProyectoController extends Controller
 {
@@ -13,6 +14,17 @@ class ProyectoController extends Controller
         return Inertia::render('Proyectos/index');
     }
     public function GuardarProyecto(Request $request){
+        $ValidarForm = Validator::make($request->Proyecto, [
+            'Titulo' => ['required', 'string', 'max:255'],
+        ]);
+
+        if (!$ValidarForm->passes()) {
+            return response()->json([
+                'Response' => false,
+                'Mensaje' => $ValidarForm->errors()->all()
+            ], 200);
+        }
+
         switch ($request->Accion) {
             case 'Guardar':
                 DB::beginTransaction();

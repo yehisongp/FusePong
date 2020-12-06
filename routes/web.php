@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\HistoriaUsuarioController;
+use App\Http\Controllers\UsuarioController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,8 +24,12 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard');
 })->name('dashboard');
 
+Route::get('/registrarUsuarioView', [UsuarioController::class, 'RegistrarUsuarioView'])->name('registro');
+Route::post('/registrarUsuario', [UsuarioController::class, 'RegistrarUsuario']);
+
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/Empresas', [EmpresasController::class, 'index'])->name('Empresas');
-Route::middleware(['auth:sanctum', 'verified'])->get('/consultarEmpresas', [EmpresasController::class, 'ConsultarEmpresas']);
+Route::get('/consultarEmpresas', [EmpresasController::class, 'ConsultarEmpresas']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/guardarEmpresa', [EmpresasController::class, 'GuardarEmpresa']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/Proyectos', [ProyectoController::class, 'index'])->name('Proyectos');

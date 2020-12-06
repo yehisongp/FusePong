@@ -152,7 +152,14 @@
                         });
                         this.consultarHistorias();
                     }else{
-
+                        res.data.Mensaje.forEach(element => {
+                            this.$bvToast.toast(element, {
+                                title: 'Advertencia',
+                                variant: 'warning',
+                                solid: true
+                            });
+                        });
+                        this.modalShow = true;
                     }
                 });
             },
@@ -166,6 +173,7 @@
                 this.FormularioTicket.idHistoria = Historia;
                 this.Accion = 'Guardar';
                 this.TituloTicket = 'Crear ticket';
+                this.resetForm();
             },
             guardarTicket(){
                 this.modalShowTicket = false;
@@ -178,7 +186,14 @@
                         });
                         this.consultarTickets(this.FormularioTicket.idHistoria);
                     }else{
-
+                        res.data.Mensaje.forEach(element => {
+                            this.$bvToast.toast(element, {
+                                title: 'Advertencia',
+                                variant: 'warning',
+                                solid: true
+                            });
+                        });
+                        this.modalShowTicket = true;
                     }
                 });
             },
@@ -191,13 +206,33 @@
                 });
             },
             cambiarEstado(Ticket, Estado, Historia){
-                axios.post('/estadoTicket', {id: Ticket, Estado: Estado}).then((res) => {
-                    if (res.data.Response) {
-                        this.consultarTickets(Historia);
-                    }else{
+                let nomEstado = Estado == 'E' ? 'En proceso' : Estado == 'F' ? 'Finalizado' : 'Cancelado';
 
+                this.$bvModal.msgBoxConfirm('¿Desea cambiar el estado del ticket a '+nomEstado+'?', {
+                    title: 'Confirme por favor',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    okVariant: 'success',
+                    okTitle: 'SI',
+                    cancelTitle: 'NO',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true
+                })
+                .then(value => {
+                    if (value != null && value != false) {
+                        axios.post('/estadoTicket', {id: Ticket, Estado: Estado}).then((res) => {
+                            if (res.data.Response) {
+                                this.consultarTickets(Historia);
+                            }
+                        });
                     }
-                });
+                })
+                .catch(err => {
+                    // An error occurred
+                })
+                
+                
             },
             editarTicket(Ticket){
                 this.FormularioTicket = {
@@ -213,9 +248,15 @@
             resetForm(){
                 this.Formulario = {
                     id: null,
-                    Titulo: null
+                    Titulo: null,
+                    Proyecto: this.$page.Proyecto,
                 };
+
+                this.FormularioTicket.id = null;
+                this.FormularioTicket.Comentarios = null;
+                
             },
+            
         },
         
     }

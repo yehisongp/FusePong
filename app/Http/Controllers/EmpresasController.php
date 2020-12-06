@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use DB;
+use Validator;
 
 class EmpresasController extends Controller
 {
@@ -25,15 +26,33 @@ class EmpresasController extends Controller
         }
     }
     public function GuardarEmpresa(Request $request){
+
+        if ($this->ValidarEmpresa($request->Empresa)['Estado']) {
+            return response()->json([
+                'Response' => false,
+                'Mensaje' => $this->ValidarEmpresa($request->Empresa)['Mensaje'],
+            ], 200);
+        }
+        
+        $ValidarForm = Validator::make($request->Empresa, [
+            'NIT' => ['required', 'string', 'max:255'],
+            'Nombre' => ['required', 'string', 'max:255'],
+            'Telefono' => ['required', 'string', 'max:255'],
+            'Direccion' => ['required', 'string', 'max:255'],
+            'Email' => ['required', 'email', 'string', 'max:255'],
+        ]);
+
+        if (!$ValidarForm->passes()) {
+            return response()->json([
+                'Response' => false,
+                'Mensaje' => $ValidarForm->errors()->all()
+            ], 200);
+        }
+
         switch ($request->Accion) {
             case 'Guardar':
                 // Validar que la empresa con el nit indicado no exista
-                if ($this->ValidarEmpresa($request->Empresa)['Estado']) {
-                    return response()->json([
-                        'Response' => false,
-                        'Mensaje' => $this->ValidarEmpresa($request->Empresa)['Mensaje'],
-                    ], 200);
-                }
+                
                 DB::beginTransaction();
                 try {
                     $Empresa = DB::TABLE('empresa')
@@ -59,12 +78,7 @@ class EmpresasController extends Controller
                 break;
             case 'Editar':
                 // Validar que la empresa con el nit indicado no exista
-                if ($this->ValidarEmpresa($request->Empresa)['Estado']) {
-                    return response()->json([
-                        'Response' => false,
-                        'Mensaje' => $this->ValidarEmpresa($request->Empresa)['Mensaje'],
-                    ], 200);
-                }
+                
                 DB::beginTransaction();
                 try {
                     $Empresa = DB::TABLE('empresa')
